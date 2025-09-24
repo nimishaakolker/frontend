@@ -2,19 +2,18 @@ import { useState } from "react"
 import { v4 as uuidv4 } from 'uuid';
 
 export default function Todo () {
-    let [todo, setTodo] = useState([{task : "sample task", id : uuidv4()}]);
+    let [todo, setTodo] = useState([{task : "sample task", id : uuidv4(), isDone : false}]);
     let [newTodo, setNewTodo] = useState("");
 //{} ki jgh () se return keyword use kie bina ui me dikhega
     let addNewTask = () => {
         setTodo((prevTodo) => {
-            return [...prevTodo, {task: newTodo, id : uuidv4()}]
+            return [...prevTodo, {task: newTodo, id : uuidv4(), isDone : false}, ]
         })
       
         setNewTodo("");
     }
 
     let updateTodo = (event) => {
-        console.log(event.target.value);
         setNewTodo(event.target.value)
     }
 
@@ -34,13 +33,13 @@ export default function Todo () {
         )
     }
 
-    let UpperCaseOne = (id) => {
+    let markAsDone = (id) => {
         setTodo((prevTodo) =>
             prevTodo.map((el) => {
                 if(el.id === id){
                      return {
-                    ...el,
-                    task : el.task.toUpperCase()
+                        ...el,
+                    isDone : true
                 }
                 }else{
                     return el
@@ -50,22 +49,7 @@ export default function Todo () {
         )
     }
 
-    let markAsDone = (id) => {
-        setTodo((prevTodo) =>
-            prevTodo.map((el) => {
-                if(el.id === id){
-                     return {
-                    ...el,
-                    task : el.task.toUpperCase(),
-                    
-                }
-                }else{
-                    return el
-                }
-               
-            })
-        )
-    }
+   
 
     return(
         <div>
@@ -78,10 +62,11 @@ export default function Todo () {
              <ul>
                 {todo.map((todo) => (
                     <li key={todo.id}> 
-                    <span> {todo.task} </span>
+                    <span style={todo.isDone ? {textDecorationLine: "line-through"} : {textDecorationLine: "none"}}>
+                         {todo.task}
+                          </span>
                     &nbsp;&nbsp; &nbsp;&nbsp;
                     <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-                    <button onClick={() => UpperCaseOne(todo.id)}>Update</button>
                     <button onClick={() => markAsDone(todo.id)}>Mark As Done</button>
                     </li>
                 ))}
